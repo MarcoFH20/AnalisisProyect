@@ -1,0 +1,99 @@
+.usuarios-container {
+    padding: 2rem;
+    margin-left: 260px; /* espacio para el sidebar */
+    margin-top: 60px;   /* espacio para el header */
+    background-color: #fdfaf6;
+    min-height: 100vh;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  h2 {
+    text-align: center;
+    color: #222;
+    margin-bottom: 1.5rem;
+  }
+  
+  .formulario {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    background: #fff;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  
+  .formulario input {
+    flex: 1 1 200px;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .formulario button {
+    padding: 0.6rem 1.2rem;
+    background-color: #00adb5;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .formulario button:hover {
+    background-color: #019ca3;
+  }
+  
+  .usuarios-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  
+  .usuarios-tabla th,
+  .usuarios-tabla td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #eaeaea;
+    text-align: left;
+  }
+  
+  .usuarios-tabla th {
+    background-color: #00adb5;
+    color: white;
+  }
+  
+  .usuarios-tabla tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .usuarios-tabla button {
+    background-color: #e84545;
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .usuarios-tabla button:hover {
+    background-color: #cc2d2d;
+  }
+  
+  .btn-volver {
+    margin-top: 2rem;
+    padding: 0.6rem 1.2rem;
+    background-color: #222;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .btn-volver:hover {
+    background-color: #444;
+  }
+  

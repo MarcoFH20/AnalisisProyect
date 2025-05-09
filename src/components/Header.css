@@ -1,0 +1,19 @@
+.header {
+  background-color: #ff7a00;
+  color: white;
+  text-align: center;
+  padding: 10px 20px;
+  font-size: 1.8rem;
+  margin: 0;           /* ✅ Elimina cualquier margen */
+  border-radius: 0;    /* ✅ Asegura que no tenga esquinas redondeadas arriba */
+}
+
+.header h1 {
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.header p {
+  margin-top: 10px;
+  font-size: 1.2rem;
+}
