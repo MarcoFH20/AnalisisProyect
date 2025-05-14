@@ -1,16 +1,15 @@
-// src/components/Login.jsx
 import React, { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase';
+import { auth } from '@/firebase';
+import { useNavigate } from 'react-router-dom';
 import fondoParque from '../assets/fondo-parque.png';
-import Dashboard from '../views/Dashboard';
 import './Login.css';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
   const [error, setError] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -23,13 +22,11 @@ const Login = () => {
     try {
       await signInWithEmailAndPassword(auth, email, pass);
       setError('');
-      setIsLoggedIn(true);
+      navigate('/dashboard');  // ✅ Redirige correctamente
     } catch (err) {
       setError('Correo o contraseña incorrectos');
     }
   };
-
-  if (isLoggedIn) return <Dashboard />;
 
   return (
     <div className="login-container">

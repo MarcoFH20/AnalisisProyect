@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { collection, getDocs, addDoc, deleteDoc, doc } from 'firebase/firestore';
-import { db } from '../firebase'; // Ajustá la ruta según tu proyecto
+import { db } from '@/firebase';
 import './Usuarios.css';
 
 function Usuarios({ setActiveModule }) {
@@ -27,13 +27,24 @@ function Usuarios({ setActiveModule }) {
   };
 
   const agregarUsuario = async () => {
-    if (!nuevoUsuario.nombres || !nuevoUsuario.apellidos) return alert('Completa todos los campos.');
+    if (!nuevoUsuario.nombres || !nuevoUsuario.apellidos)
+      return alert('Completa todos los campos.');
+
     await addDoc(usuariosRef, {
       ...nuevoUsuario,
       edad: parseInt(nuevoUsuario.edad),
       createdAt: new Date()
     });
-    setNuevoUsuario({ nombres: '', apellidos: '', edad: '', email: '', rol: '', telefono: '' });
+
+    setNuevoUsuario({
+      nombres: '',
+      apellidos: '',
+      edad: '',
+      email: '',
+      rol: '',
+      telefono: ''
+    });
+
     obtenerUsuarios();
   };
 
@@ -47,13 +58,21 @@ function Usuarios({ setActiveModule }) {
       <h2>Gestión de Usuarios</h2>
 
       <div className="formulario">
-        <input placeholder="Nombres" value={nuevoUsuario.nombres} onChange={(e) => setNuevoUsuario({ ...nuevoUsuario, nombres: e.target.value })} />
-        <input placeholder="Apellidos" value={nuevoUsuario.apellidos} onChange={(e) => setNuevoUsuario({ ...nuevoUsuario, apellidos: e.target.value })} />
-        <input placeholder="Edad" type="number" value={nuevoUsuario.edad} onChange={(e) => setNuevoUsuario({ ...nuevoUsuario, edad: e.target.value })} />
-        <input placeholder="Email" type="email" value={nuevoUsuario.email} onChange={(e) => setNuevoUsuario({ ...nuevoUsuario, email: e.target.value })} />
-        <input placeholder="Teléfono" value={nuevoUsuario.telefono} onChange={(e) => setNuevoUsuario({ ...nuevoUsuario, telefono: e.target.value })} />
-        <input placeholder="Rol (admin/trabajador)" value={nuevoUsuario.rol} onChange={(e) => setNuevoUsuario({ ...nuevoUsuario, rol: e.target.value })} />
-        <button onClick={agregarUsuario}>Agregar Usuario</button>
+        <input placeholder="Nombres" value={nuevoUsuario.nombres}
+          onChange={(e) => setNuevoUsuario({ ...nuevoUsuario, nombres: e.target.value })} />
+        <input placeholder="Apellidos" value={nuevoUsuario.apellidos}
+          onChange={(e) => setNuevoUsuario({ ...nuevoUsuario, apellidos: e.target.value })} />
+        <input placeholder="Edad" type="number" value={nuevoUsuario.edad}
+          onChange={(e) => setNuevoUsuario({ ...nuevoUsuario, edad: e.target.value })} />
+        <input placeholder="Email" type="email" value={nuevoUsuario.email}
+          onChange={(e) => setNuevoUsuario({ ...nuevoUsuario, email: e.target.value })} />
+        <input placeholder="Teléfono" value={nuevoUsuario.telefono}
+          onChange={(e) => setNuevoUsuario({ ...nuevoUsuario, telefono: e.target.value })} />
+        <input placeholder="Rol (admin/trabajador)" value={nuevoUsuario.rol}
+          onChange={(e) => setNuevoUsuario({ ...nuevoUsuario, rol: e.target.value })} />
+        <button onClick={agregarUsuario} className="boton-generico boton-primario">
+          Agregar Usuario
+        </button>
       </div>
 
       <table className="usuarios-tabla">
@@ -77,21 +96,21 @@ function Usuarios({ setActiveModule }) {
               <td>{user.email}</td>
               <td>{user.telefono}</td>
               <td>{user.rol}</td>
-              <td><button onClick={() => eliminarUsuario(user.id)}>Eliminar</button></td>
+              <td>
+                <button onClick={() => eliminarUsuario(user.id)} className="boton-generico boton-eliminar">
+                  Eliminar
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
 
-      <button
-        onClick={() => {
-          console.log('Volver al inicio');
-          setActiveModule('Inicio');
-        }}
-        className="btn-volver"
-      >
-        Volver al Inicio
-      </button>
+      <div className="botones-centrados">
+        <button onClick={() => setActiveModule('Inicio')} className="boton-generico boton-primario">
+          Volver al Inicio
+        </button>
+      </div>
     </div>
   );
 }

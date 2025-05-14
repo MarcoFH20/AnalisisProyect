@@ -1,24 +1,46 @@
-import React, { useEffect, useState } from 'react';
-import { Html5QrcodeScanner } from 'html5-qrcode';
+import React, { useEffect, useRef, useState } from 'react';
+import { Html5Qrcode } from 'html5-qrcode';
 import { collection, query, where, getDocs, updateDoc, doc } from 'firebase/firestore';
-import { db } from '../firebase';
-import './Usuarios.css';
+import { db } from '@/firebase';
+import successSound from '@/assets/success.mp3';
+import errorSound from '@/assets/error.mp3';
 
 function EscanearEntrada({ setActiveModule }) {
   const [mensaje, setMensaje] = useState('');
   const [color, setColor] = useState('black');
+  const [scannerActivo, setScannerActivo] = useState(false);
+  const scannerRef = useRef(null);
+  const successAudio = useRef(new Audio(successSound));
+  const errorAudio = useRef(new Audio(errorSound));
 
-  useEffect(() => {
-    const scanner = new Html5QrcodeScanner(
-      'qr-reader',
+  const iniciarScanner = () => {
+    if (scannerActivo) return;
+
+    const qrCodeScanner = new Html5Qrcode("qr-reader");
+    scannerRef.current = qrCodeScanner;
+
+    qrCodeScanner.start(
+      { facingMode: "environment" },
       { fps: 10, qrbox: { width: 250, height: 250 } },
-      false
-    );
+      handleScanSuccess,
+      handleScanError
+    ).then(() => {
+      setScannerActivo(true);
+    }).catch((err) => {
+      console.error("Error iniciando escáner:", err);
+    });
+  };
 
-    scanner.render(handleScanSuccess, handleScanError);
-
-    return () => scanner.clear();
-  }, []);
+  const detenerScanner = () => {
+    if (scannerRef.current) {
+      scannerRef.current.stop().then(() => {
+        scannerRef.current.clear();
+        setScannerActivo(false);
+      }).catch((err) => {
+        console.error("Error al detener escáner:", err);
+      });
+    }
+  };
 
   const handleScanSuccess = async (decodedText) => {
     const boletosRef = collection(db, 'boletos');
@@ -28,6 +50,7 @@ function EscanearEntrada({ setActiveModule }) {
     if (res.empty) {
       setMensaje(`❌ Boleto no encontrado`);
       setColor('crimson');
+      errorAudio.current.play();
       return;
     }
 
@@ -40,25 +63,49 @@ function EscanearEntrada({ setActiveModule }) {
     if (data.estado === 'usado') {
       setMensaje('⚠️ Boleto ya fue utilizado');
       setColor('orange');
+      errorAudio.current.play();
     } else if (hoy > fechaVal) {
       setMensaje('⏰ Boleto vencido');
       setColor('gray');
+      errorAudio.current.play();
     } else {
       await updateDoc(doc(db, 'boletos', boletoDoc.id), { estado: 'usado' });
       setMensaje('✅ Boleto válido y registrado como usado');
       setColor('green');
+      successAudio.current.play();
     }
   };
 
-  const handleScanError = (error) => {
-    // opcional: setMensaje('Error escaneando QR');
+  const handleScanError = (err) => {
+    // Omitido: No interrumpe escaneo
   };
+
+  useEffect(() => {
+    return () => {
+      detenerScanner(); // Detener al salir del componente
+    };
+  }, []);
 
   return (
     <div className="usuarios-container">
       <h2>Escanear Código QR</h2>
-      <div id="qr-reader" style={{ marginBottom: '1rem' }}></div>
+
+      {!scannerActivo && (
+        <button onClick={iniciarScanner} className="btn-activar">
+          Activar escáner
+        </button>
+      )}
+
+      {scannerActivo && (
+        <button onClick={detenerScanner} className="btn-detener">
+          Detener escáner
+        </button>
+      )}
+
+      <div id="qr-reader" style={{ width: '300px', margin: '1rem auto' }}></div>
+
       <p style={{ fontWeight: 'bold', color }}>{mensaje}</p>
+
       <button onClick={() => setActiveModule('Inicio')} className="btn-volver">
         Volver al Inicio
       </button>

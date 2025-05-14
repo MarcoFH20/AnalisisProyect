@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { collection, getDocs, addDoc, deleteDoc, doc } from 'firebase/firestore';
-import { db } from '../firebase';
+import { db } from '@/firebase';
 import './Usuarios.css';
 
 function Entradas({ setActiveModule }) {
@@ -33,13 +33,14 @@ function Entradas({ setActiveModule }) {
       const exportados = filtrarEntradas();
       for (const ent of exportados) {
         await addDoc(reportesRef, {
-          tipo: 'entrada',
+          tipo: 'manual',
+          modulo: 'entradas',
           serie: ent.serie || '-',
           tipoEntrada: ent.tipo || '-',
           estado: ent.estado || '-',
           fecha_emision: ent.fecha_emision || '-',
           fecha_validacion: ent.fecha_validacion || '-',
-          exportado_en: new Date().toISOString()
+          exportado_en: new Date()
         });
       }
       alert('Boletos exportados al módulo de Reportes');
@@ -94,7 +95,7 @@ function Entradas({ setActiveModule }) {
         <input type="date" value={fechaInicio} onChange={(e) => setFechaInicio(e.target.value)} />
         <input type="date" value={fechaFin} onChange={(e) => setFechaFin(e.target.value)} />
 
-        <button onClick={exportarAReportes}>Exportar a Reportes</button>
+        <button className="boton-primario" onClick={exportarAReportes}>Exportar a Reportes</button>
       </div>
 
       <table className="usuarios-tabla">
@@ -119,19 +120,20 @@ function Entradas({ setActiveModule }) {
                 <td>{ent.estado || '-'}</td>
                 <td>{ent.fecha_emision || '-'}</td>
                 <td>{ent.fecha_validacion || '-'}</td>
-                <td><button onClick={() => eliminarEntrada(ent.id)}>Eliminar</button></td>
+                <td>
+                  <button className="boton-eliminar" onClick={() => eliminarEntrada(ent.id)}>Eliminar</button>
+                </td>
               </tr>
             ))
           )}
         </tbody>
       </table>
 
-      <button
-        onClick={() => setActiveModule('Inicio')}
-        className="btn-volver"
-      >
-        Volver al Inicio
-      </button>
+      <div className="botones-centrados">
+        <button onClick={() => setActiveModule('Inicio')} className="boton-generico boton-primario">
+          Volver al Inicio
+        </button>
+      </div>
     </div>
   );
 }
